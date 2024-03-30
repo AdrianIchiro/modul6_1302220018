@@ -8,6 +8,13 @@ public class SayaTubeVideo
 
     public SayaTubeVideo(string title)
     {
+        if (title == null)
+        {
+            throw new ArgumentException("title null");
+        } else if (title.Length > 200) {
+            throw new ArgumentException("sudah melewati batas maksimal");
+        }
+
         this.title = title;
         this.id = new Random().Next(10000, 99999);
         this.playCount = 0;
@@ -19,7 +26,21 @@ public class SayaTubeVideo
 
     public void IncreasePlayCount(int count)
     {
-        this.playCount += count;
+        if(count < 0 || count > 25000000)
+        {
+            throw new ArgumentException("melewati batas");
+        }
+        try
+        {
+            checked
+            {
+                this.playCount += count;
+            }
+        } catch (Exception e)
+        {
+            throw new OverflowException("telah overflow", e);
+        }
+        
     }
 
     public void PrintVideoDetails()
@@ -38,6 +59,13 @@ public class SayaTubeUser
 
     public SayaTubeUser(string username)
     {
+        if(username.Length == null)
+        {
+            throw new ArgumentException("username null");
+        } else if(username.Length > 100)
+        {
+            throw new ArgumentException("username melewati batas");
+        }
         this.id = new Random().Next(10000, 99999);
         this.Username = username;
         this.uploadedVideos = [];
@@ -62,7 +90,7 @@ public class SayaTubeUser
     {
         int no = 1;
         Console.WriteLine("user : " + this.Username);
-        for (int j = 0; j < this.uploadedVideos.Count; j++)
+        for (int j = 0; j < 8; j++)
         {
             
             Console.WriteLine("Video " + no + " judul: " + this.uploadedVideos[j].getTitle());
@@ -75,29 +103,41 @@ class Program
 {
     static void Main(string[] args)
     {
-        SayaTubeUser user = new SayaTubeUser("adrian");
-        SayaTubeVideo video1 = new SayaTubeVideo("Classroom Of the Elite");
-        SayaTubeVideo video2 = new SayaTubeVideo("Boku No Pico");
-        SayaTubeVideo video3 = new SayaTubeVideo("Ironman");
-        SayaTubeVideo video4 = new SayaTubeVideo("Agak Laen");
-        SayaTubeVideo video5 = new SayaTubeVideo("Indonesiaku");
-        SayaTubeVideo video6 = new SayaTubeVideo("Social Page");
-        SayaTubeVideo video7 = new SayaTubeVideo("Sword Art Online");
-        SayaTubeVideo video8 = new SayaTubeVideo("Gak tau lagi saya");
-        SayaTubeVideo video9 = new SayaTubeVideo("Death note");
-        SayaTubeVideo video10 = new SayaTubeVideo("njay");
+        try
+        {
+            SayaTubeUser user = new SayaTubeUser("adrian");
+            SayaTubeVideo video1 = new SayaTubeVideo("Classroom Of the Elite");
+            SayaTubeVideo video2 = new SayaTubeVideo("Boku No Pico");
+            SayaTubeVideo video3 = new SayaTubeVideo("Ironman");
+            SayaTubeVideo video4 = new SayaTubeVideo("Agak Laen");
+            SayaTubeVideo video5 = new SayaTubeVideo("Indonesiaku");
+            SayaTubeVideo video6 = new SayaTubeVideo("Social Page");
+            SayaTubeVideo video7 = new SayaTubeVideo("Sword Art Online");
+            SayaTubeVideo video8 = new SayaTubeVideo("Gak tau lagi saya");
+            SayaTubeVideo video9 = new SayaTubeVideo("Death note");
+            SayaTubeVideo video10 = new SayaTubeVideo("njay");
 
-        user.AddVideo(video1);
-        user.AddVideo(video2);
-        user.AddVideo(video3);
-        user.AddVideo(video4);
-        user.AddVideo(video5);
-        user.AddVideo(video6);
-        user.AddVideo(video7);
-        user.AddVideo(video8);
-        user.AddVideo(video9);
-        user.AddVideo(video10);
+            user.AddVideo(video1);
+            user.AddVideo(video2);
+            user.AddVideo(video3);
+            user.AddVideo(video4);
+            user.AddVideo(video5);
+            user.AddVideo(video6);
+            user.AddVideo(video7);
+            user.AddVideo(video8);
+            user.AddVideo(video9);
+            user.AddVideo(video10);
 
-        user.PrintAllVideoPlaycount();
+            user.PrintAllVideoPlaycount();
+
+            for (int i = 0; i < 10000000000; i++)
+            {
+                video1.IncreasePlayCount(i);
+            }
+
+        } catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 }
